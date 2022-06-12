@@ -1,0 +1,32 @@
+
+.user-filter {
+  display: flex;
+  justify-content: space-between;
+  margin : 20px 0 
+}
+
+.form_container {
+  display: flex;
+  flex-direction: column;
+  background-color: #eee;
+  padding: 30px;
+  width: 80%;
+  margin: 20px auto;
+}
+
+.form_btn {
+  padding: 10px;
+  font-size: 18px;
+  margin-bottom: 10px;
+  border: none;
+  color: white;
+  background-color: #0c3754;
+}
+
+.content {
+  width: 80%;
+  margin: 0 auto;
+}
+.content div {
+  margin-top: 7px;
+}

@@ -1,0 +1,42 @@
+.login {
+  width: 400px;
+ margin: 50px auto;
+}
+
+.login__container {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  background-color: #d2edf4;
+  padding: 30px;
+  margin-top: 50px !important;
+}
+
+.login label {
+  flex-basis: 30%;
+}
+
+.login .form-input {
+  padding: 10px;
+  font-size: 18px;
+  margin-bottom: 10px;
+  width: 200px;
+}
+
+.login__btn {
+  padding: 10px;
+  font-size: 18px;
+  margin-bottom: 10px;
+  border: none;
+  color: white;
+  background-color: #0c3754;
+  width: 100px;
+}
+
+.login__google {
+  background-color: #4285f4;
+}
+
+.login div {
+  margin-top: 7px;
+}

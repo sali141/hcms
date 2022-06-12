@@ -1,0 +1,31 @@
+.medications-list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.medications-list-item input {
+  width : 30%
+}
+
+.medications-list-item svg {
+  font-size: 20px;
+  color : red;
+  cursor: pointer;
+}
+
+.reports-list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.reports-list-item input {
+  width : 45%
+}
+
+.reports-list-item svg {
+  font-size: 20px;
+  color : red;
+  cursor: pointer;
+}
