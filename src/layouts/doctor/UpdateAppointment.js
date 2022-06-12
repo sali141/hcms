@@ -96,7 +96,7 @@ const UpdateAppointment = () => {
   return (
     <div className="content">
       <div className="dashboard__header">
-        <div>Update Appointment</div>
+        <div>Update Appointments</div>
         <div>
           <button
             onClick={() => {
