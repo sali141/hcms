@@ -18,22 +18,41 @@ export const fetchAppointmentsList = async (uid) => {
 };
 
 export const fetchAppointmentById = async (id) => {
-  console.log(id)
   try {
     const q = query(collection(db, "appointments"), where("__name__", "==", id));
     const doc = await getDocs(q);
     return {...doc.docs[0].data() , id : doc.id};
 
   } catch (err) {
-    console.log(err);
-    return err;
+    return {error : true};
+  }
+};
+
+export const fetchPatientByMobile = async (mobile) => {
+  try {
+    const q = query(collection(db, "patients"), where("mobile", "==", mobile));
+    const patient = await getDocs(q);
+    return {...patient.docs[0].data() , id : patient.docs[0].id};
+
+  } catch (err) {
+    console.log(err)
+    return {error : true, message : err};
   }
 };
 
 
-export const saveAppoinment = async (appointment) => {
+export const saveAppoinment = async (patient, appointment) => {
   try {
+    if(!patient.id) {
+      const savedPatient = await addDoc(collection(db, "patients"),patient);
+      appointment['patiendId'] = savedPatient.id;
+    } else {
+      appointment['patiendId'] = patient.id;
+    }
+   
     const response = await addDoc(collection(db, "appointments"),appointment);
+
+    console.log(response.id)
     return response;
   } catch (err) {
     return(err);

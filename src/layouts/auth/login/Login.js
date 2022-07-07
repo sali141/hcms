@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
+import LoadingOverlay from "react-loading-overlay";
 import { useNavigate } from "react-router-dom";
 import {
   auth,
@@ -10,18 +11,27 @@ import "./Login.css";
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [user, loading] = useAuthState(auth);
+  const [user, userLoaded] = useAuthState(auth);
+  const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (loading) {
+    if (userLoaded) {
       // maybe trigger a loading screen
       return;
     }
     if (user) navigate("/dashboard");
-  }, [user, loading]);
+  }, [user, userLoaded]);
+
+  const handleLoginClick = async () => {
+    setLoading(true)
+    await logInWithEmailAndPassword(email, password);
+    setLoading(false)
+  }
 
   return (
+    <LoadingOverlay active={loading} spinner text="Loading...">
     <div className="login">
       <div className="login__container">
       <div className="form-row">
@@ -47,7 +57,7 @@ function Login() {
         <div className="form_footer">
         <button
           className="login__btn"
-          onClick={() => logInWithEmailAndPassword(email, password)}
+          onClick={() => handleLoginClick()}
         >
           Login
         </button>
@@ -55,6 +65,7 @@ function Login() {
         
       </div>
     </div>
+    </LoadingOverlay>
   );
 }
 

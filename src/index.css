@@ -36,6 +36,26 @@ button {
   background-color: #0c3754;
 }
 
+button:disabled {
+  background-color: #ccc;
+}
+
+.mid-content {
+  min-height: 80vh;
+} 
+
+.w-25 {
+  width: 25% !important;
+}
+
+.w-75 {
+  width: 75% !important;
+}
+
+.w-100 {
+  width: 100% !important;
+}
+
 .style-table {
   width: 100%;
   border : 1px solid #ccc;
@@ -56,11 +76,15 @@ button {
 .form-row  {
   display: flex;
   align-items: center;
+  
 }
 
+.form-title {
+  font-size: 22px;
+}
 
 .form-row label {
-  flex-basis: 20%;
+  flex-basis: 25%;
   text-align: left;
 }
 
