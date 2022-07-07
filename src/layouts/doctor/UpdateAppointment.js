@@ -1,21 +1,17 @@
+import { QRCodeCanvas } from "qrcode.react";
 import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
+// import "./Users.css";
+import { MdCancel } from "react-icons/md";
 import { useNavigate, useParams } from "react-router-dom";
 import { auth } from "../../firebase";
 import {
   fetchAppointmentById,
-  saveAppoinment,
-  updateAppoinment,
+  fetchPatientById, updateAppoinment
 } from "../../utils/appointmentUtils";
-// import "./Users.css";
-import { MdCancel } from "react-icons/md";
 
 const UpdateAppointment = () => {
-  const [email, setEmail] = useState("");
-  const [patientTitle, setPatienetTitile] = useState("");
-  const [patientName, setPatienetName] = useState("");
-  const [nic, setNic] = useState("");
-  const [age, setAge] = useState("");
+  const [patient, setPatienet] = useState("");
   const [symptoms, setSymptoms] = useState("");
   const [user, loading] = useAuthState(auth);
   const [appointment, setAppointment] = useState({});
@@ -26,14 +22,15 @@ const UpdateAppointment = () => {
   const navigate = useNavigate();
 
   const save = async () => {
-    // if (!patientName) alert("Please enter name");
-      await updateAppoinment(id , {
+    const currAppointment = {...appointment};
+    delete currAppointment.id;
+    await updateAppoinment(id , { ...currAppointment, 
         medications,
         reports,
         symptoms,
         status : 'completed'
     });
-    // navigate("/dashboard");
+    navigate("/dashboard");
   };
 
   useEffect(() => {
@@ -43,11 +40,10 @@ const UpdateAppointment = () => {
 
   useEffect(() => {
     const fetchAppointment = async (id) => {
-      const resposne = await fetchAppointmentById(id);
-      console.log(resposne)
-      setAppointment(resposne);
-      // setUsers(resposne);
-      // setFilteredUsers(resposne);
+      const appResp = await fetchAppointmentById(id);
+      setAppointment(appResp)
+      const patientResp = await fetchPatientById(appResp.patiendId, appResp.id );
+      setPatienet(patientResp);
     };
 
     fetchAppointment(id);
@@ -93,6 +89,19 @@ const UpdateAppointment = () => {
     );
   };
 
+  const downloadQRCode = () => {
+    const qrCodeURL = document.getElementById('qrCodeEl')
+      .toDataURL("image/png")
+      .replace("image/png", "image/octet-stream");
+    console.log(qrCodeURL)
+    let aEl = document.createElement("a");
+    aEl.href = qrCodeURL;
+    aEl.download = "QR_Code.png";
+    document.body.appendChild(aEl);
+    aEl.click();
+    document.body.removeChild(aEl);
+  }
+
   return (
     <div className="content">
       <div className="dashboard__header">
@@ -108,26 +117,37 @@ const UpdateAppointment = () => {
         </div>
       </div>
       <div className="form_container">
-        <h3>Patient Details</h3>
+        <h3 >Patient Details</h3>
+        {/* <input
+        type="button"
+        className="download-btn"
+        value="Download"
+        onClick={downloadQRCode}
+      />
+        <QRCodeCanvas
+        id="qrCodeEl"
+        size={150}
+        value={'test'}
+      /> */}
         <div className="form-row">
           <label>Name</label>
           <div>
-            : {appointment.patientTitle} {appointment.patientName}{" "}
+            : {patient.title} {patient.name}{" "}
           </div>
         </div>
         <div className="form-row">
           <label>Age</label>
-          <div>: {appointment.age}</div>
+          <div>: {patient.age}</div>
         </div>
         <div className="form-row">
           <label>Gender</label>
-          <div>: {appointment.gender}</div>
+          <div>: {patient.gender}</div>
         </div>
         <div className="form-row">
           <label>NIC</label>
-          <div>: {appointment.nic}</div>
+          <div>: {patient.nic}</div>
         </div>
-        <h3>Symptoms</h3>
+        <h3 className="mt-3">Symptoms</h3>
         <div className="">
           <div>
             <textarea
@@ -139,7 +159,7 @@ const UpdateAppointment = () => {
             </textarea>
           </div>
         </div>
-        <h3>
+        <h3 className="d-flex align-items-center mt-4">
           Medications <span onClick={addMedication}>Add New</span>
         </h3>
         <div className="medications-list">
@@ -168,7 +188,7 @@ const UpdateAppointment = () => {
             </div>
           ))}
         </div>
-        <h3>
+        <h3 className="d-flex align-items-center mt-4">
           Lab Reports <span onClick={addReport}>Add New</span>
         </h3>
         <div className="reports-list">
@@ -191,7 +211,7 @@ const UpdateAppointment = () => {
             </div>
           ))}
         </div>
-        <div className="form-footer">
+        <div className="form-footer mt-3">
           <button className="form_btn" onClick={save}>
             Update
           </button>

@@ -107,6 +107,7 @@ button:disabled {
   display: flex;
   justify-content: space-between;
   margin-bottom: 10px;
+  font-size: 1.32em;
 }
 
 .form_container h3 span{

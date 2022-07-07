@@ -18,7 +18,6 @@ function Dashboard() {
 
     const fetchUser = async (user) => {
       const resposne = await fetchUserDetails(user);
-      console.log(resposne);
       setUserDetails(resposne);
     };
 

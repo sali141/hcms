@@ -21,7 +21,7 @@ const AddAppointment = () => {
     email: "",
     age: "",
     gender: "",
-  }
+  };
   const [patient, setPatient] = useState(initialPatient);
   const [patientFound, setPatientFound] = useState(false);
   const [showPatientForm, setShowPatientForm] = useState(false);
@@ -37,13 +37,20 @@ const AddAppointment = () => {
       alert("Please enter name");
       return;
     }
-    const appointment = { date: appointmentDate, docId: uid };
+    const appointment = {
+      date: appointmentDate,
+      docId: uid,
+      medications: [],
+      reports: [],
+      symptoms: " ",
+      status: "booked",
+    };
     await saveAppoinment(patient, appointment);
     navigate("/dashboard");
   };
 
   useEffect(() => {
-    if (loading) return;
+    if (userLoaded) return;
     if (!user) navigate("/");
   }, [user, userLoaded]);
 
@@ -73,8 +80,6 @@ const AddAppointment = () => {
       setPatient(response);
       setShowPatientForm(true);
       setPatientFound(true);
-
-      console.log(response);
     }
     setLoading(false);
   };
