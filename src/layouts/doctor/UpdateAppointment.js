@@ -42,7 +42,7 @@ const UpdateAppointment = () => {
     const fetchAppointment = async (id) => {
       const appResp = await fetchAppointmentById(id);
       setAppointment(appResp)
-      const patientResp = await fetchPatientById(appResp.patiendId, appResp.id );
+      const patientResp = await fetchPatientById(appResp);
       setPatienet(patientResp);
     };
 

@@ -80,7 +80,7 @@ const Appointments = (props) => {
                 ) : (
                   <button
                     onClick={() => {
-                      navigate(`/update-appointment/${item.appointmentId}`);
+                      navigate(`/update-appointment/${item.id}`);
                     }}
                   >
                     Update Appointment
