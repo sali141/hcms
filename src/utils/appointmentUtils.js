@@ -4,10 +4,9 @@ import {
   doc,
   getDocs,
   orderBy,
-  query,
-  setDoc,
-  Timestamp,
-  where,
+  query, Timestamp,
+  updateDoc,
+  where
 } from "firebase/firestore";
 import { db } from "../firebase";
 
@@ -103,7 +102,7 @@ export const saveAppoinment = async (patient, appointment) => {
 export const updateAppoinment = async (id, appointment) => {
   try {
     appointment.updated = Timestamp.now();
-    const response = await setDoc(doc(db, "appointments", id), appointment);
+    const response = await updateDoc(doc(db, "appointments", id), appointment);
     return response;
   } catch (err) {
     return { error: true, message: err };

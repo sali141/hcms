@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import LoadingOverlay from "react-loading-overlay";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { auth, logInWithEmailAndPassword } from "../../../firebase";
 import useValidator from "../../../hooks/useValidator";
 import "./Login.css";
@@ -13,13 +13,20 @@ function Login() {
   const [loading, setLoading] = useState(false);
   const [validator, showValidationMessage] = useValidator();
   const navigate = useNavigate();
+  const { appointmentId } = useParams();
 
   useEffect(() => {
     if (userLoaded) {
       // maybe trigger a loading screen
       return;
     }
-    if (user) navigate("/dashboard");
+    if (user) {
+      if (user.role === "pharmacist" && appointmentId) {
+        navigate(`/view-persciption/${appointmentId}`);
+      } else {
+        navigate(`/dashboard`);
+      }
+    }
   }, [user, userLoaded]);
 
   const handleLoginClick = async () => {
@@ -75,9 +82,9 @@ function Login() {
           </div>
           <div className="row mt-4 align-items-center">
             <div className="col-md-12">
-            <button className="login__btn" onClick={() => handleLoginClick()}>
-              Login
-            </button>
+              <button className="login__btn" onClick={() => handleLoginClick()}>
+                Login
+              </button>
             </div>
           </div>
         </div>

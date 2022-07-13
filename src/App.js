@@ -8,6 +8,7 @@ import UpdateAppointment from "./layouts/doctor/UpdateAppointment";
 import { Header } from "./components/header/Header";
 import EditProfile from "./layouts/common/EditProfile";
 import MedicalHistory from "./layouts/doctor/MedicalHistory";
+import ViewPersciption from "./layouts/pharmacist/ViewPersciption";
 
 function App() {
   return (
@@ -16,12 +17,14 @@ function App() {
       <Router>
         <Routes>
           <Route exact path="/" element={<Login />} />
+          <Route exact path="/:appointmentId" element={<Login />} />
           <Route exact path="/add-user" element={<AddUser />} />
           <Route exact path="/add-appointment/:uid" element={<AddAppointment />} />
           <Route exact path="/update-appointment/:id" element={<UpdateAppointment />} />
           <Route exact path="/dashboard" element={<Dashboard />} />
           <Route exact path="/edit-profile" element={<EditProfile />} />
           <Route exact path="/medical-history/:patientId/:appointmentId" element={<MedicalHistory />} />
+          <Route exact path="/view-persciption/:id" element={<ViewPersciption />} />
         </Routes>
       </Router>
     </div>

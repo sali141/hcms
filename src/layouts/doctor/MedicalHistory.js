@@ -4,6 +4,7 @@ import {
   fetchMedicalHistory,
   fetchPatientDetailsById,
 } from "../../utils/appointmentUtils";
+import LoadingOverlay from "react-loading-overlay";
 
 const MedicalHistory = () => {
   const navigate = useNavigate();
@@ -38,6 +39,8 @@ const MedicalHistory = () => {
   }, [patientId]);
 
   return (
+    <LoadingOverlay active={loading} spinner text="Loading...">
+
     <div className="content">
       <div className="dashboard__header">
         <div>Medical History</div>
@@ -134,6 +137,7 @@ const MedicalHistory = () => {
         )}
       </div>
     </div>
+    </LoadingOverlay>
   );
 };
 

@@ -1,4 +1,4 @@
-import { collection, doc, getDocs, orderBy, query, setDoc, updateDoc, where } from "firebase/firestore";
+import { collection, doc, getDocs, orderBy, query, updateDoc, where } from "firebase/firestore";
 import { db } from "../firebase";
 
 export const fetchUserDetails = async (user) => {
