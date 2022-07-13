@@ -13,7 +13,7 @@ const EditProfile = () => {
   const [loading, setLoading] = useState(false);
   const [validator, showValidationMessage] = useValidator();
   const [profile, setProfile] = useState({});
-  const [userDetails, setUserDetails] = useState({});
+  const [userDetails, setUserDetails] = useState(null);
 
   useEffect(() => {
     if (userLoading) return;
@@ -28,9 +28,9 @@ const EditProfile = () => {
         address: resposne.address || "",
         phone: resposne.phone || "",
         nic: resposne.nic || "",
-        regNo : resposne.regNo || "",
-        location : resposne.location || "",
-        specialization : resposne.specialization || ""
+        regNo: resposne.regNo || "",
+        location: resposne.location || "",
+        specialization: resposne.specialization || "",
       });
       setLoading(false);
     };
@@ -109,16 +109,11 @@ const EditProfile = () => {
                     }
                     placeholder="Address"
                   />
-                  {validator.message(
-                    "address",
-                    profile?.address,
-                    "required",
-                    {
-                      messages: {
-                        required: "Address required",
-                      },
-                    }
-                  )}
+                  {validator.message("address", profile?.address, "required", {
+                    messages: {
+                      required: "Address required",
+                    },
+                  })}
                 </div>
               </div>
               <div className="row mt-3  align-items-center">
@@ -165,52 +160,61 @@ const EditProfile = () => {
                   })}
                 </div>
               </div>
-              <div className="row mt-3  align-items-center">
-                <div className="col-md-2">
-                  {userDetails.role === "doctor"
-                    ? "Hospital"
-                    : "Pharmacy / Lab"}
-                </div>
-                <div className="col-md-10">
-                  <input
-                    type="text"
-                    className="form-input w-50"
-                    value={profile?.location}
-                    onChange={(e) =>
-                      handleProfileInputChange(e.target.value, "location")
-                    }
-                    placeholder={
-                      userDetails.role === "doctor"
+              {userDetails.role !== "admin" && (
+                <>
+                  <div className="row mt-3  align-items-center">
+                    <div className="col-md-2">
+                      {userDetails.role === "doctor"
                         ? "Hospital"
-                        : "Pharmacy / Lab"
-                    }
-                  />
-                  {validator.message("location", profile?.location, "required", {
-                    messages: {
-                      required: "Location is required",
-                    },
-                  })}
-                </div>
-              </div>
-              <div className="row mt-3  align-items-center">
-                <div className="col-md-2">Registration No.</div>
-                <div className="col-md-10">
-                  <input
-                    type="text"
-                    className="form-input w-50"
-                    value={profile?.regNo}
-                    onChange={(e) =>
-                      handleProfileInputChange(e.target.value, "regNo")
-                    }
-                    placeholder="Reg No"
-                  />
-                  {validator.message("regNo", profile?.regNo, "required", {
-                    messages: {
-                      required: "Reg No. is required",
-                    },
-                  })}
-                </div>
-              </div>
+                        : "Pharmacy / Lab"}
+                    </div>
+                    <div className="col-md-10">
+                      <input
+                        type="text"
+                        className="form-input w-50"
+                        value={profile?.location}
+                        onChange={(e) =>
+                          handleProfileInputChange(e.target.value, "location")
+                        }
+                        placeholder={
+                          userDetails.role === "doctor"
+                            ? "Hospital"
+                            : "Pharmacy / Lab"
+                        }
+                      />
+                      {validator.message(
+                        "location",
+                        profile?.location,
+                        "required",
+                        {
+                          messages: {
+                            required: "Location is required",
+                          },
+                        }
+                      )}
+                    </div>
+                  </div>
+                  <div className="row mt-3  align-items-center">
+                    <div className="col-md-2">Registration No.</div>
+                    <div className="col-md-10">
+                      <input
+                        type="text"
+                        className="form-input w-50"
+                        value={profile?.regNo}
+                        onChange={(e) =>
+                          handleProfileInputChange(e.target.value, "regNo")
+                        }
+                        placeholder="Reg No"
+                      />
+                      {validator.message("regNo", profile?.regNo, "required", {
+                        messages: {
+                          required: "Reg No. is required",
+                        },
+                      })}
+                    </div>
+                  </div>
+                </>
+              )}
               {userDetails.role === "doctor" && (
                 <div className="row mt-3 align-items-center">
                   <div className="col-md-2">Specialization</div>
@@ -219,7 +223,10 @@ const EditProfile = () => {
                       className="form-input w-50"
                       value={profile?.specialization}
                       onChange={(e) =>
-                        handleProfileInputChange(e.target.value, "specialization")
+                        handleProfileInputChange(
+                          e.target.value,
+                          "specialization"
+                        )
                       }
                     >
                       <option>Select..</option>
@@ -250,7 +257,7 @@ const EditProfile = () => {
               Update
             </button>
             <button
-            className="form_btn ml-3"
+              className="form_btn ml-3"
               onClick={() => {
                 navigate("/dashboard");
               }}

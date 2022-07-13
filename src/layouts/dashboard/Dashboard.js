@@ -35,7 +35,7 @@ function Dashboard() {
       case "doctor":
         return <Appointments user={user} setLoading={setLoading} />;
       case "pharmacist":
-        return <Pharmacist setLoading={setLoading} />;
+        return <Pharmacist user={user} setLoading={setLoading} />;
       default:
         return <div>Not authorized to access dashboard</div>;
     }

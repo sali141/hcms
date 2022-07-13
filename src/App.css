@@ -11,3 +11,14 @@
 .header .logo .logo-img{
   width: 130px;
 }
+
+@media only screen and (max-width: 600px) {
+  .header .logo {
+   position: static;
+   text-align: center;
+  }
+
+  .header .logo .logo-img{
+    width: 100px;
+  }
+}

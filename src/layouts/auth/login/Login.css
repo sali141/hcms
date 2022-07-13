@@ -37,3 +37,10 @@
 .login__google {
   background-color: #4285f4;
 }
+
+
+@media only screen and (max-width: 600px) {
+  .login {
+   width: 85%;
+  }
+}
