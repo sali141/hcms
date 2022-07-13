@@ -30,19 +30,18 @@ const UpdateAppointment = () => {
   const save = async () => {
     if (validator.allValid()) {
       setQrGenerated(true);
-      // setLoading(true);
-      // const currAppointment = { ...appointment };
-      // delete currAppointment.id;
-      // await updateAppoinment(id, {
-      //   ...currAppointment,
-      //   medications,
-      //   reports,
-      //   symptoms,
-      //   status: "completed",
-      // });
-      // setLoading(false);
+      setLoading(true);
+      const currAppointment = { ...appointment };
+      delete currAppointment.id;
+      await updateAppoinment(id, {
+        ...currAppointment,
+        medications,
+        reports,
+        symptoms,
+        status: "completed",
+      });
+      setLoading(false);
 
-      // navigate("/dashboard");
     } else {
       showValidationMessage(true);
     }

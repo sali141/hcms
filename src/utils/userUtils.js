@@ -1,11 +1,11 @@
-import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
+import { collection, doc, getDocs, orderBy, query, setDoc, updateDoc, where } from "firebase/firestore";
 import { db } from "../firebase";
 
 export const fetchUserDetails = async (user) => {
   try {
     const q = query(collection(db, "users"), where("uid", "==", user?.uid));
-    const doc = await getDocs(q);
-    return doc.docs[0].data();
+    const usr = await getDocs(q);
+    return { ...usr.docs[0].data(), id: usr.docs[0].id };
   } catch (err) {
     console.log(err);
     return err;
@@ -28,3 +28,11 @@ export const fetchUserList = async () => {
   }
 };
 
+export const updatePrifile = async (id, profile) => {
+  try {
+    const response = await updateDoc(doc(db, "users", id), profile);
+    return response;
+  } catch (err) {
+    return { error: true, message: err };
+  }
+};
