@@ -1,4 +1,4 @@
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
 import { db } from "../firebase";
 
 export const fetchUserDetails = async (user) => {
@@ -15,7 +15,7 @@ export const fetchUserDetails = async (user) => {
 export const fetchUserList = async () => {
   const list = [];
   try {
-    const q = query(collection(db, "users"));
+    const q = query(collection(db, "users"), orderBy('role', 'asc'));
     const doc = await getDocs(q);
     doc.docs.forEach( d => {
       list.push(d.data())

@@ -3,16 +3,33 @@ import {
   collection,
   doc,
   getDocs,
+  orderBy,
   query,
   setDoc,
+  Timestamp,
   where,
 } from "firebase/firestore";
 import { db } from "../firebase";
 
-export const fetchAppointmentsList = async (uid) => {
+export const fetchAppointmentsList = async (docId) => {
+  const list = [];
+  const todate = new Date().toLocaleDateString();
+  try {
+    const q = query(collection(db, "appointments"), where("docId", "==", docId), where("date", "==", todate), orderBy('created', 'asc'));
+    const doc = await getDocs(q);
+    doc.docs.forEach((d) => {
+      list.push({ ...d.data(), id: d.id });
+    });
+    return list;
+  } catch (err) {
+    return { error: true, message: err };
+  }
+};
+
+export const fetchMedicalHistory = async (patientId) => {
   const list = [];
   try {
-    const q = query(collection(db, "appointments"), where("docId", "==", uid));
+    const q = query(collection(db, "appointments"), where("patientId", "==", patientId), where("status", "==", "completed"));
     const doc = await getDocs(q);
     doc.docs.forEach((d) => {
       list.push({ ...d.data(), id: d.id });
@@ -38,9 +55,19 @@ export const fetchAppointmentById = async (id) => {
 
 export const fetchPatientById = async (app) => {
   try {
-    const q = query(collection(db, "patients"), where("__name__", "==", app.patiendId));
+    const q = query(collection(db, "patients"), where("__name__", "==", app.patientId));
     const doc = await getDocs(q);
     return { ...doc.docs[0].data(), ...app };
+  } catch (err) {
+    return { error: true, message: err };
+  }
+};
+
+export const fetchPatientDetailsById = async (id) => {
+  try {
+    const q = query(collection(db, "patients"), where("__name__", "==", id));
+    const doc = await getDocs(q);
+    return { ...doc.docs[0].data() };
   } catch (err) {
     return { error: true, message: err };
   }
@@ -60,10 +87,11 @@ export const saveAppoinment = async (patient, appointment) => {
   try {
     if (!patient.id) {
       const savedPatient = await addDoc(collection(db, "patients"), patient);
-      appointment["patiendId"] = savedPatient.id;
+      appointment["patientId"] = savedPatient.id;
     } else {
-      appointment["patiendId"] = patient.id;
+      appointment["patientId"] = patient.id;
     }
+    appointment.created = Timestamp.now();
 
     const response = await addDoc(collection(db, "appointments"), appointment);
     return response;
@@ -74,6 +102,7 @@ export const saveAppoinment = async (patient, appointment) => {
 
 export const updateAppoinment = async (id, appointment) => {
   try {
+    appointment.updated = Timestamp.now();
     const response = await setDoc(doc(db, "appointments", id), appointment);
     return response;
   } catch (err) {

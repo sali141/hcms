@@ -14,8 +14,8 @@ export const userGenders = [
 
 export const userSalutations = [
   {name : "Mr.", value : "Mr."},
-  {name : "Mrs.", value : "Mrd."},
-  {name : "Ms.", value : "Md."},
+  {name : "Mrs.", value : "Mrs."},
+  {name : "Ms.", value : "Ms."},
   {name : "Baby.", value : "Baby."},
   {name : "Master.", value : "Master."},
   {name : "Ven.", value : "Ven."},

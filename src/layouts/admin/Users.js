@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
-import LoadingOverlay from "react-loading-overlay";
 import { useNavigate } from "react-router-dom";
 import { fetchUserList } from "../../utils/userUtils";
 import "./Users.css";
 
 export const Users = (props) => {
-  const { user } = props;
+  const { user , setLoading} = props;
   const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   const [filteredUsers, setFilteredUsers] = useState(users);
@@ -15,9 +13,13 @@ export const Users = (props) => {
   useEffect(() => {
     const fetchUsers = async () => {
       const resposne = await fetchUserList();
+      if (!resposne.error) {
       setUsers(resposne);
       setFilteredUsers(resposne);
-      setLoading(false)
+    } else {
+      console.log(resposne.message)
+    }
+      setLoading(false);
     };
 
     fetchUsers();
@@ -35,9 +37,7 @@ export const Users = (props) => {
   };
 
   return (
-    <LoadingOverlay active={loading} spinner text="Loading...">
-
-    <div className="mid-content">
+      <div className="mid-content">
         <h2>User Management</h2>
         <div className="user-filter">
           <div>
@@ -88,8 +88,6 @@ export const Users = (props) => {
             ))}
           </tbody>
         </table>
-    </div>
-    </LoadingOverlay>
-
+      </div>
   );
 };

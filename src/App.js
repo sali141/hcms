@@ -6,6 +6,8 @@ import AddUser from "./layouts/admin/AddUser";
 import AddAppointment from "./layouts/admin/AddAppointment";
 import UpdateAppointment from "./layouts/doctor/UpdateAppointment";
 import { Header } from "./components/header/Header";
+import EditProfile from "./layouts/common/EditProfile";
+import MedicalHistory from "./layouts/doctor/MedicalHistory";
 
 function App() {
   return (
@@ -18,6 +20,8 @@ function App() {
           <Route exact path="/add-appointment/:uid" element={<AddAppointment />} />
           <Route exact path="/update-appointment/:id" element={<UpdateAppointment />} />
           <Route exact path="/dashboard" element={<Dashboard />} />
+          <Route exact path="/edit-profile" element={<EditProfile />} />
+          <Route exact path="/medical-history/:patientId/:appointmentId" element={<MedicalHistory />} />
         </Routes>
       </Router>
     </div>

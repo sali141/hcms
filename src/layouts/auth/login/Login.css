@@ -1,5 +1,5 @@
 .login {
-  width: 400px;
+  width: 500px;
  margin: 50px auto;
 }
 
@@ -10,6 +10,7 @@
   background-color: #d2edf4;
   padding: 30px;
   margin-top: 50px !important;
+  border-radius: 8px;
 }
 
 .login label {
@@ -20,7 +21,7 @@
   padding: 10px;
   font-size: 18px;
   margin-bottom: 10px;
-  width: 200px;
+  width: 100%;
 }
 
 .login__btn {
@@ -35,8 +36,4 @@
 
 .login__google {
   background-color: #4285f4;
-}
-
-.login div {
-  margin-top: 7px;
 }

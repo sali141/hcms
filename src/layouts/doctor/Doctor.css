@@ -29,3 +29,5 @@
   color : red;
   cursor: pointer;
 }
+
+.hidden { display: none;}
