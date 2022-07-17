@@ -108,3 +108,28 @@ export const updateAppoinment = async (id, appointment) => {
     return { error: true, message: err };
   }
 };
+
+export const saveLabAppoinment = async (labAppointment) => {
+  try {
+    labAppointment.created = Timestamp.now();
+    const labApp = await addDoc(collection(db, "lab_appointments"), labAppointment);
+    await updateAppoinment(labAppointment.appointmentId, {labAppointment : labApp.id});
+    return labApp.id;
+  } catch (err) {
+    return { error: true, message: err };
+  }
+};
+
+export const fetchLabAppointmentsList = async (docId) => {
+  const list = [];
+  try {
+    const q = query(collection(db, "lab_appointments"), orderBy('created', 'asc'));
+    const doc = await getDocs(q);
+    doc.docs.forEach((d) => {
+      list.push({ ...d.data(), id: d.id });
+    });
+    return list;
+  } catch (err) {
+    return { error: true, message: err };
+  }
+};

@@ -5,6 +5,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { MdCancel } from "react-icons/md";
 import LoadingOverlay from "react-loading-overlay";
 import { useNavigate, useParams } from "react-router-dom";
+import { APP_URL } from "../../config";
 import { auth } from "../../firebase";
 import useValidator from "../../hooks/useValidator";
 import {
@@ -29,7 +30,6 @@ const UpdateAppointment = () => {
 
   const save = async () => {
     if (validator.allValid()) {
-      setQrGenerated(true);
       setLoading(true);
       const currAppointment = { ...appointment };
       delete currAppointment.id;
@@ -40,6 +40,7 @@ const UpdateAppointment = () => {
         symptoms,
         status: "completed",
       });
+      setQrGenerated(true);
       setLoading(false);
 
     } else {
@@ -55,9 +56,14 @@ const UpdateAppointment = () => {
   useEffect(() => {
     const fetchAppointment = async (id) => {
       const appResp = await fetchAppointmentById(id);
+      console.log(appResp)
       setAppointment(appResp);
       const patientResp = await fetchPatientById(appResp);
       setPatienet(patientResp);
+
+      if (appResp.status === 'completed') {
+        setQrGenerated(true);
+      }
       setLoading(false);
     };
 
@@ -170,7 +176,7 @@ const UpdateAppointment = () => {
           {qrGenerated ? (
             <>
               <div className="d-flex align-items-center justify-content-center">
-                <QRCodeCanvas id="qrCodeEl" size={250} value={"http://localhost/3000"} />
+                <QRCodeCanvas id="qrCodeEl" size={250} value={`${APP_URL}/view-persciption/${appointment.id}`} />
               </div>
               <div className="form-footer mt-3">
                 <button className="form_btn mr-2" onClick={downloadQRCode}>

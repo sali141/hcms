@@ -21,7 +21,7 @@ function Login() {
       return;
     }
     if (user) {
-      if (user.role === "pharmacist" && appointmentId) {
+      if (appointmentId) {
         navigate(`/view-persciption/${appointmentId}`);
       } else {
         navigate(`/dashboard`);

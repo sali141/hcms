@@ -17,6 +17,8 @@ import {
   addDoc,
 } from "firebase/firestore";
 
+import {getStorage} from "firebase/storage"
+
 const firebaseConfig = {
   apiKey: "AIzaSyAjcWGwlOckRRuX-1ls9Ng9Q86rilR2vf8",
   authDomain: "e-prescription-df871.firebaseapp.com",
@@ -29,7 +31,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-
+const storage = getStorage(app)
 const googleProvider = new GoogleAuthProvider();
 
 const signInWithGoogle = async () => {
@@ -101,4 +103,5 @@ export {
   registerWithEmailAndPassword,
   sendPasswordReset,
   logout,
+  storage
 };

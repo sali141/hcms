@@ -1,21 +1,27 @@
-import React, { useState } from 'react'
-import BarcodeScannerComponent from "react-qr-barcode-scanner";
-
+import React from "react";
+// import { QrReader } from "react-qr-reader";
+import { useNavigate } from "react-router-dom";
+import { logout } from "../../firebase";
 export const Pharmacist = (props) => {
-  const { user , setLoading} = props;
-  const [data, setData] = useState("Not Found");
-  setLoading(false)
+  const { setLoading } = props;
+  const navigate = useNavigate();
+
+  setLoading(false);
   return (
     <div>
-      <BarcodeScannerComponent
-        width={500}
-        height={500}
-        onUpdate={(err, result) => {
-          if (result) setData(result.text);
-          else setData("Not Found");
-        }}
-      />
-      <p>{data}</p>
+      <div>
+        <button
+          className="dashboard__btn mr-3"
+          onClick={() => {
+            navigate("/edit-profile");
+          }}
+        >
+          Edit Profile
+        </button>
+        <button className="dashboard__btn" onClick={logout}>
+          Logout
+        </button>
+      </div>
     </div>
-  )
-}
+  );
+};

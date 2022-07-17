@@ -8,7 +8,8 @@ import UpdateAppointment from "./layouts/doctor/UpdateAppointment";
 import { Header } from "./components/header/Header";
 import EditProfile from "./layouts/common/EditProfile";
 import MedicalHistory from "./layouts/doctor/MedicalHistory";
-import ViewPersciption from "./layouts/pharmacist/ViewPersciption";
+import ViewPersciption from "./layouts/common/ViewPersciption";
+import UpdateLabReport from "./layouts/mlt/UpdateLabReport";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
           <Route exact path="/edit-profile" element={<EditProfile />} />
           <Route exact path="/medical-history/:patientId/:appointmentId" element={<MedicalHistory />} />
           <Route exact path="/view-persciption/:id" element={<ViewPersciption />} />
+          <Route exact path="/update-lab-report/:id" element={<UpdateLabReport />} />
         </Routes>
       </Router>
     </div>

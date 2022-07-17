@@ -6,6 +6,7 @@ import { auth, logout } from "../../firebase";
 import { fetchUserDetails } from "../../utils/userUtils";
 import { Users } from "../admin/Users";
 import Appointments from "../doctor/Appointments";
+import { LabAppointments } from "../mlt/LabAppointments";
 import { Pharmacist } from "../pharmacist/Pharmacist";
 import "./Dashboard.css";
 
@@ -36,7 +37,10 @@ function Dashboard() {
         return <Appointments user={user} setLoading={setLoading} />;
       case "pharmacist":
         return <Pharmacist user={user} setLoading={setLoading} />;
-      default:
+      case "mlt":
+        return <LabAppointments user={user} setLoading={setLoading} />;
+      default: 
+        setLoading(false);
         return <div>Not authorized to access dashboard</div>;
     }
   };
@@ -48,19 +52,21 @@ function Dashboard() {
           <div>
             Welcome {userDetails?.name} ({userDetails?.role})
           </div>
-          <div>
-            <button
-              className="dashboard__btn mr-3"
-              onClick={() => {
-                navigate("/edit-profile");
-              }}
-            >
-              Edit Profile
-            </button>
-            <button className="dashboard__btn" onClick={logout}>
-              Logout
-            </button>
-          </div>
+          {userDetails?.role !== "pharmacist" && (
+            <div>
+              <button
+                className="dashboard__btn mr-3"
+                onClick={() => {
+                  navigate("/edit-profile");
+                }}
+              >
+                Edit Profile
+              </button>
+              <button className="dashboard__btn" onClick={logout}>
+                Logout
+              </button>
+            </div>
+          )}
         </div>
         <div className="dashboard__content">
           {user && userDetails?.role && renderDashboadUserContent()}

@@ -7,8 +7,17 @@ export const fetchUserDetails = async (user) => {
     const usr = await getDocs(q);
     return { ...usr.docs[0].data(), id: usr.docs[0].id };
   } catch (err) {
-    console.log(err);
-    return err;
+    return { error: true, message: err };
+  }
+};
+
+export const fetchUserDetailsById = async (id) => {
+  try {
+    const q = query(collection(db, "users"), where("uid", "==", id));
+    const usr = await getDocs(q);
+    return { ...usr.docs[0].data(), id: usr.docs[0].id };
+  } catch (err) {
+    return { error: true, message: err };
   }
 };
 
@@ -23,8 +32,7 @@ export const fetchUserList = async () => {
     return list;
 
   } catch (err) {
-    console.log(err);
-    return err;
+    return { error: true, message: err };
   }
 };
 
