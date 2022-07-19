@@ -1,16 +1,18 @@
-import {
-  getDownloadURL,
-  ref, uploadBytesResumable
-} from "firebase/storage";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import LoadingOverlay from "react-loading-overlay";
+import { NotificationManager } from "react-notifications";
 import { useNavigate, useParams } from "react-router-dom";
 import { auth, storage } from "../../firebase";
 import {
-  fetchAppointmentById, updateAppoinment
+  fetchAppointmentById,
+  updateAppoinment,
+  fetchPatientById
 } from "../../utils/appointmentUtils";
 import { fetchUserDetails, fetchUserDetailsById } from "../../utils/userUtils";
+import emailjs from "@emailjs/browser";
+import { APP_URL } from "../../config";
 
 const UpdateLabReport = () => {
   const navigate = useNavigate();
@@ -21,12 +23,14 @@ const UpdateLabReport = () => {
   const [labAppointmentId, setLabAppointmentId] = useState(null);
   const [uploadDoc, setUploadDoc] = useState(null);
   const [doctorUser, setDoctorUser] = useState(null);
+  const [patient, setPatienet] = useState(null);
+
   const allowedRoles = ["mlt"];
   const { id } = useParams();
 
   useEffect(() => {
     if (userLoading) return;
-   
+
     const fetchUser = async (user) => {
       const resposne = await fetchUserDetails(user);
       if (resposne.error) {
@@ -40,7 +44,6 @@ const UpdateLabReport = () => {
         }
       }
       setLoading(false);
-     
     };
 
     if (!user) {
@@ -48,15 +51,19 @@ const UpdateLabReport = () => {
     } else {
       fetchUser(user);
     }
-
   }, [user, userLoading, id]);
 
   const fetchAppointment = async (id) => {
     const appResp = await fetchAppointmentById(id);
-    const userResp = await fetchUserDetailsById(appResp.docId)
-    setDoctorUser(userResp);
-    setLabAppointmentId(appResp.labAppointment);
-    setAppointment(appResp);
+    if (!appResp.error) {
+      setAppointment(appResp);
+      const userResp = await fetchUserDetailsById(appResp.docId);
+      const patientResp = await fetchPatientById(appResp);
+      setPatienet(patientResp);
+      setDoctorUser(userResp);
+      setLabAppointmentId(appResp.labAppointment);
+    }
+    
     setLoading(false);
   };
 
@@ -85,6 +92,11 @@ const UpdateLabReport = () => {
             updateAppoinment(appointment.id, {
               reports: updatedReports,
             }).then(() => {
+              NotificationManager.success(
+                "Report uploaded successfully",
+                "Upload Report"
+              );
+
               setLoading(false);
             });
           });
@@ -93,12 +105,44 @@ const UpdateLabReport = () => {
     }
   };
 
+  const sendReports = () => {
+    const emailParams = {
+      to_email: patient.email,
+      to_name: patient.name,
+      report_link: `${APP_URL}/download-report`,
+      ref_no : appointment.labAppointment
+    };
+    emailjs
+      .send(
+        "service_lnzar6j",
+        "template_mxz00m8",
+        emailParams,
+        "mor3SktvscEpRYZYO"
+      )
+      .then(
+        (result) => {
+          setLoading(false);
+          NotificationManager.success(
+            "Report download link to patient successfully",
+            "Send Report"
+          );
+        },
+        (error) => {
+          setLoading(false);
+          console.log(error);
+        }
+      );
+  }
+
   return (
     <LoadingOverlay active={loading} spinner text="Loading...">
       {appointment && userDetails && (
         <div className="content">
           <div className="dashboard__header">
-            <div> Lab Appointment - Ref. No : <strong>{labAppointmentId}</strong></div>
+            <div>
+              {" "}
+              Lab Appointment - Ref. No : <strong>{labAppointmentId}</strong>
+            </div>
             <div>
               <button
                 onClick={() => {
@@ -116,7 +160,7 @@ const UpdateLabReport = () => {
                   <div className="col-md-2">
                     <strong>Doctor / Consultant</strong>
                   </div>
-                  <div className="col-md-10 py-4">: {doctorUser.name}</div>
+                  <div className="col-md-10 py-4">: {doctorUser?.name}</div>
                 </div>
                 <div className="row align-items-center">
                   <div className="col-md-12">
@@ -131,31 +175,33 @@ const UpdateLabReport = () => {
                               <div className="col-md-4 d-flex align-items-center">
                                 {rep.type} - {rep.duration}
                               </div>
-                              {labAppointmentId && 
-                              <div className="col-md-8">
-                              {rep.link ? (
-                                <a
-                                  href={rep.link}
-                                  rel="noreferrer"
-                                  target="_blank"
-                                >
-                                  DOWNLOAD
-                                </a>
-                              ) : (
-                                <>
-                                  <input
-                                    type="file"
-                                    onChange={(e) =>
-                                      setUploadDoc(e.target.files[0])
-                                    }
-                                  ></input>
-                                  <button onClick={(e) => uploadDocument(i)}>
-                                    Upload
-                                  </button>
-                                </>
+                              {labAppointmentId && (
+                                <div className="col-md-8">
+                                  {rep.link ? (
+                                    <a
+                                      href={rep.link}
+                                      rel="noreferrer"
+                                      target="_blank"
+                                    >
+                                      DOWNLOAD
+                                    </a>
+                                  ) : (
+                                    <>
+                                      <input
+                                        type="file"
+                                        onChange={(e) =>
+                                          setUploadDoc(e.target.files[0])
+                                        }
+                                      ></input>
+                                      <button
+                                        onClick={(e) => uploadDocument(i)}
+                                      >
+                                        Upload
+                                      </button>
+                                    </>
+                                  )}
+                                </div>
                               )}
-                            </div>
-                              }
                             </div>
                           ))}
                         </div>
@@ -163,16 +209,19 @@ const UpdateLabReport = () => {
                   </div>
                 </div>
                 <div className="form-footer">
-                    <>
-                      <button
-                        className="form_btn mt-3"
-                        onClick={() => {
-                          navigate("/dashboard");
-                        }}
-                      >
-                        Back
-                      </button>
-                    </>
+                  <>
+                    <button className="form_btn mr-2" onClick={sendReports}>
+                      Send Reports to Patient
+                    </button>
+                    <button
+                      className="form_btn"
+                      onClick={() => {
+                        navigate("/dashboard");
+                      }}
+                    >
+                      Back
+                    </button>
+                  </>
                 </div>
               </>
             </div>

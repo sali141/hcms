@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import LoadingOverlay from "react-loading-overlay";
+import { NotificationManager } from "react-notifications";
 import { useNavigate } from "react-router-dom";
 import { userRoles } from "../../const/userConst";
 import { auth, registerWithEmailAndPassword } from "../../firebase";
@@ -22,6 +23,7 @@ const AddUser = () => {
       setLoading(true);
       await registerWithEmailAndPassword(name, email, password, role);
       navigate("/dashboard");
+      NotificationManager.success("User updated successfully", "Add User");
       setLoading(false);
     } else {
       showValidationMessage(true);

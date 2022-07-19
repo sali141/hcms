@@ -12,6 +12,7 @@ import DatePicker from "react-datepicker";
 import "./Users.css";
 import "react-datepicker/dist/react-datepicker.css";
 import useValidator from "../../hooks/useValidator";
+import { NotificationManager } from "react-notifications";
 const AddAppointment = () => {
   const initialPatient = {
     title: "",
@@ -47,6 +48,11 @@ const AddAppointment = () => {
       };
       await saveAppoinment(patient, appointment);
       setLoading(false);
+      NotificationManager.success(
+        "Appointment created successfully",
+        "Add Appointment"
+      );
+
       navigate("/dashboard");
     } else {
       showValidationMessage(true);
@@ -72,7 +78,7 @@ const AddAppointment = () => {
       if (response.error) {
         setShowPatientForm(true);
         setPatientFound(false);
-        setPatient({ ...initialPatient , mobile :  searchMobile});
+        setPatient({ ...initialPatient, mobile: searchMobile });
       } else {
         setPatient(response);
         setShowPatientForm(true);

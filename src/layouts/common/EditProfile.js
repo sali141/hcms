@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import LoadingOverlay from "react-loading-overlay";
+import { NotificationManager } from "react-notifications";
 import { useNavigate } from "react-router-dom";
 import { userGenders, docSpecilizations } from "../../const/userConst";
 import { auth } from "../../firebase";
@@ -43,6 +44,11 @@ const EditProfile = () => {
       setLoading(true);
       await updatePrifile(userDetails.id, profile);
       navigate("/dashboard");
+      NotificationManager.success(
+        "Profile updated successfully",
+        "Edit Profile"
+      );
+
       setLoading(false);
     } else {
       showValidationMessage(true);

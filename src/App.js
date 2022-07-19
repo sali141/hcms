@@ -10,11 +10,14 @@ import EditProfile from "./layouts/common/EditProfile";
 import MedicalHistory from "./layouts/doctor/MedicalHistory";
 import ViewPersciption from "./layouts/common/ViewPersciption";
 import UpdateLabReport from "./layouts/mlt/UpdateLabReport";
+import { NotificationContainer } from "react-notifications";
+import DownloadReport from "./layouts/common/DownloadReport";
 
 function App() {
   return (
     <div className="app">
       <Header />
+      <NotificationContainer/>
       <Router>
         <Routes>
           <Route exact path="/" element={<Login />} />
@@ -27,6 +30,7 @@ function App() {
           <Route exact path="/medical-history/:patientId/:appointmentId" element={<MedicalHistory />} />
           <Route exact path="/view-persciption/:id" element={<ViewPersciption />} />
           <Route exact path="/update-lab-report/:id" element={<UpdateLabReport />} />
+          <Route exact path="/download-report" element={<DownloadReport />} />
         </Routes>
       </Router>
     </div>

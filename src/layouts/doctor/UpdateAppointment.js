@@ -1,3 +1,4 @@
+import { ref, uploadString, getDownloadURL } from "firebase/storage";
 import { QRCodeCanvas } from "qrcode.react";
 import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -6,13 +7,15 @@ import { MdCancel } from "react-icons/md";
 import LoadingOverlay from "react-loading-overlay";
 import { useNavigate, useParams } from "react-router-dom";
 import { APP_URL } from "../../config";
-import { auth } from "../../firebase";
+import { auth, storage } from "../../firebase";
 import useValidator from "../../hooks/useValidator";
 import {
   fetchAppointmentById,
   fetchPatientById,
   updateAppoinment,
 } from "../../utils/appointmentUtils";
+import emailjs from "@emailjs/browser";
+import { NotificationManager } from "react-notifications";
 
 const UpdateAppointment = () => {
   const [patient, setPatienet] = useState("");
@@ -23,6 +26,7 @@ const UpdateAppointment = () => {
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);
   const [qrGenerated, setQrGenerated] = useState(false);
+  const [emailSent, setEmailSent] = useState(false);
 
   const { id } = useParams();
   const navigate = useNavigate();
@@ -40,9 +44,13 @@ const UpdateAppointment = () => {
         symptoms,
         status: "completed",
       });
+      NotificationManager.success(
+        "Appointment updated successfully",
+        "Update Appointment"
+      );
+
       setQrGenerated(true);
       setLoading(false);
-
     } else {
       showValidationMessage(true);
     }
@@ -56,12 +64,11 @@ const UpdateAppointment = () => {
   useEffect(() => {
     const fetchAppointment = async (id) => {
       const appResp = await fetchAppointmentById(id);
-      console.log(appResp)
       setAppointment(appResp);
       const patientResp = await fetchPatientById(appResp);
       setPatienet(patientResp);
 
-      if (appResp.status === 'completed') {
+      if (appResp.status === "completed") {
         setQrGenerated(true);
       }
       setLoading(false);
@@ -113,15 +120,55 @@ const UpdateAppointment = () => {
   const downloadQRCode = () => {
     const qrCodeURL = document
       .getElementById("qrCodeEl")
-      .toDataURL("image/png")
-      .replace("image/png", "image/octet-stream");
-    console.log(qrCodeURL);
+      .toDataURL("image/jpeg");
+    // .replace("image/png", "image/octet-stream");
     let aEl = document.createElement("a");
     aEl.href = qrCodeURL;
-    aEl.download = "QR_Code.png";
+    aEl.download = `${appointment.id}_QR_Code.jpg`;
     document.body.appendChild(aEl);
     aEl.click();
     document.body.removeChild(aEl);
+    NotificationManager.success(
+      "QR Image downloaded successfully",
+      "Download QR"
+    );
+  };
+
+  const emailQRCode = () => {
+    setLoading(true);
+    const qrCodeURL = document
+      .getElementById("qrCodeEl")
+      .toDataURL("image/jpeg");
+    const storageRef = ref(storage, `qr/${appointment.id}`);
+    uploadString(storageRef, qrCodeURL, "data_url").then((snapshot) => {
+      getDownloadURL(snapshot.ref).then((downloadURL) => {
+        const emailParams = {
+          to_email: patient.email,
+          to_name: patient.name,
+          qr_link: downloadURL,
+        };
+        emailjs
+          .send(
+            "service_lnzar6j",
+            "template_nzdhhuj",
+            emailParams,
+            "mor3SktvscEpRYZYO"
+          )
+          .then(
+            (result) => {
+              setLoading(false);
+              NotificationManager.success(
+                "QR code sent to patient successfully",
+                "Send QR"
+              );
+            },
+            (error) => {
+              setLoading(false);
+              console.log(error);
+            }
+          );
+      });
+    });
   };
 
   return (
@@ -176,9 +223,16 @@ const UpdateAppointment = () => {
           {qrGenerated ? (
             <>
               <div className="d-flex align-items-center justify-content-center">
-                <QRCodeCanvas id="qrCodeEl" size={250} value={`${APP_URL}/view-persciption/${appointment.id}`} />
+                <QRCodeCanvas
+                  id="qrCodeEl"
+                  size={250}
+                  value={`${APP_URL}/view-persciption/${appointment.id}`}
+                />
               </div>
               <div className="form-footer mt-3">
+                <button className="form_btn mr-2" onClick={emailQRCode}>
+                  Email QR
+                </button>
                 <button className="form_btn mr-2" onClick={downloadQRCode}>
                   Download QR
                 </button>

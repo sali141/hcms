@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import LoadingOverlay from "react-loading-overlay";
+import { NotificationManager } from "react-notifications";
 import { useNavigate, useParams } from "react-router-dom";
 import { auth, logout } from "../../firebase";
-import useValidator from "../../hooks/useValidator";
 import {
   fetchAppointmentById,
   saveLabAppoinment,
@@ -66,6 +66,11 @@ const ViewPersciption = () => {
         issued: true,
       });
       setIsMediIssued(true);
+      NotificationManager.success(
+        "Medicine issue updated successfully",
+        "Issue Medicine"
+      );
+
       setLoading(false);
     }
   };
@@ -81,6 +86,10 @@ const ViewPersciption = () => {
       const labAppResp = await saveLabAppoinment(labAppoinment);
       if (!labAppResp.error) {
         setLabAppointmentId(labAppResp);
+        NotificationManager.success(
+          "Lab appointment created successfully",
+          "Lab Appointment"
+        );
       }
       setLoading(false);
     }

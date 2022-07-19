@@ -52,6 +52,20 @@ export const fetchAppointmentById = async (id) => {
   }
 };
 
+export const fetchAppointmentByLabAppointment = async (labAppointment) => {
+  console.log(labAppointment)
+  try {
+    const q = query(
+      collection(db, "appointments"),
+      where("labAppointment", "==", labAppointment)
+    );
+    const doc = await getDocs(q);
+    return { ...doc.docs[0].data(), id: doc.docs[0].id };
+  } catch (err) {
+    return { error: true, message: err };
+  }
+};
+
 export const fetchPatientById = async (app) => {
   try {
     const q = query(collection(db, "patients"), where("__name__", "==", app.patientId));
