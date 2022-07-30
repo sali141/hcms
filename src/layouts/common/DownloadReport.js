@@ -72,9 +72,12 @@ const DownloadReport = () => {
                         <div>
                           {appointment.reports.map((rep, i) => (
                             <div key={i} className="row">
-                              <div className="col-md-12 d-flex align-items-center">
+                              <div className="col-md-4 d-flex align-items-center">
                                 {rep.type} - {rep.duration}
-                                {rep.link ? (
+                                
+                              </div>
+                              <div className="col-md-4 d-flex align-items-center">
+                              {rep.link ? (
                                     <a
                                       href={rep.link}
                                       rel="noreferrer"

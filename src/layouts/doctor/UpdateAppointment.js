@@ -149,10 +149,10 @@ const UpdateAppointment = () => {
         };
         emailjs
           .send(
-            "service_lnzar6j",
-            "template_nzdhhuj",
+            "service_7jgm11c",
+            "template_q31copk",
             emailParams,
-            "mor3SktvscEpRYZYO"
+            "6iAXd-zKTH62g4CU2"
           )
           .then(
             (result) => {

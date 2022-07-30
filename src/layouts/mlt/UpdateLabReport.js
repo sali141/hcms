@@ -114,10 +114,10 @@ const UpdateLabReport = () => {
     };
     emailjs
       .send(
-        "service_lnzar6j",
-        "template_mxz00m8",
+        "service_7jgm11c",
+        "template_il0l9wz",
         emailParams,
-        "mor3SktvscEpRYZYO"
+        "6iAXd-zKTH62g4CU2"
       )
       .then(
         (result) => {
