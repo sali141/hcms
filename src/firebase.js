@@ -19,13 +19,22 @@ import {
 
 import {getStorage} from "firebase/storage"
 
+// const firebaseConfig = {
+//   apiKey: "AIzaSyAjcWGwlOckRRuX-1ls9Ng9Q86rilR2vf8",
+//   authDomain: "e-prescription-df871.firebaseapp.com",
+//   projectId: "e-prescription-df871",
+//   storageBucket: "e-prescription-df871.appspot.com",
+//   messagingSenderId: "78547884069",
+//   appId: "1:78547884069:web:46bae129ed2e64bfca87cc"
+// };
+
 const firebaseConfig = {
-  apiKey: "AIzaSyAjcWGwlOckRRuX-1ls9Ng9Q86rilR2vf8",
-  authDomain: "e-prescription-df871.firebaseapp.com",
-  projectId: "e-prescription-df871",
-  storageBucket: "e-prescription-df871.appspot.com",
-  messagingSenderId: "78547884069",
-  appId: "1:78547884069:web:46bae129ed2e64bfca87cc"
+  apiKey: "AIzaSyA6yl2wHspxPd-ts_rRLOSw0oc8AZ4hJtw",
+  authDomain: "hcms-service.firebaseapp.com",
+  projectId: "hcms-service",
+  storageBucket: "hcms-service.appspot.com",
+  messagingSenderId: "557177869837",
+  appId: "1:557177869837:web:d2e9360e48da1948b2a744"
 };
 
 const app = initializeApp(firebaseConfig);

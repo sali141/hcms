@@ -50,7 +50,7 @@ function Dashboard() {
       <div className="dashboard">
         <div className="dashboard__header">
           <div>
-            Welcome {userDetails?.name} ({userDetails?.role})
+            Welcome {userDetails?.name} ({userDetails?.role.toUpperCase()})
           </div>
           {userDetails?.role !== "pharmacist" && (
             <div>
